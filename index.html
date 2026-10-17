@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Explore eight Nelson patterns with Individuals and Moving Range charts. A private, offline-capable CSV tool."><title>Nelson Patterns · IMR Explorer</title>
+<style>
+:root{font-family:system-ui,-apple-system,Segoe UI,sans-serif;color:#182e3b;background:#f2f5f5;font-size:16px}*{box-sizing:border-box}body{margin:0}main{max-width:1200px;margin:auto;padding:36px 24px 64px}header{border-top:5px solid #14776e;padding:25px 0 20px}h1{font-size:clamp(2rem,5vw,3rem);letter-spacing:-.04em;margin:8px 0}h2{font-size:1.45rem}h3{font-size:1.13rem}p{line-height:1.6}.eyebrow{color:#12655e;font-size:.8rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase}.lede{max-width:750px;color:#435864}.panel,.column{background:white;border:1px solid #d6e0e0;border-radius:12px;padding:24px;margin:20px 0}.method{border-left:4px solid #af7213;background:#fff8e8;padding:14px 18px;font-size:.92rem;line-height:1.6}.actions{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:16px 0}button,.download{border:1px solid #126b63;background:#126b63;color:white;border-radius:6px;padding:11px 17px;font:inherit;font-weight:600;cursor:pointer;text-decoration:none;display:inline-block}button.secondary,.download.secondary{background:white;color:#125e58}button:disabled{opacity:.55;cursor:wait}button:hover,.download:hover{filter:brightness(.92)}button:focus-visible,a:focus-visible,input:focus-visible,summary:focus-visible{outline:3px solid #e1a52e;outline-offset:3px}input{max-width:100%;padding:10px 0}label{display:block;font-weight:600}code{background:#edf1f3;padding:2px 4px;border-radius:3px}details{margin:20px 0}summary{cursor:pointer;font-weight:650}li{line-height:1.6;margin:7px 0}.status{white-space:pre-wrap;line-height:1.6}.error{color:#9e2020;border-left:4px solid #bf3030;padding:12px;background:#fff1ef}.warning{color:#775010;background:#fff8e8;padding:12px}.muted{color:#526875;font-size:.9rem}.chart{border-top:1px solid #dae3e5;padding-top:12px;margin-top:25px}.plot{overflow-x:auto;padding:8px 0}.plot canvas,.plot img{display:block;max-width:none}.stats{border-collapse:collapse;margin:16px 0;font-size:.9rem;min-width:300px}.stats td,.stats th{text-align:left;padding:6px 14px;border-bottom:1px solid #e2e8e9}.stats th{font-weight:600}.observations{overflow-wrap:anywhere}.column h2{overflow-wrap:anywhere}.rule-list{columns:2;column-gap:36px}.rule-list li{break-inside:avoid}.report-head{overflow-wrap:anywhere}footer{margin-top:30px;border-top:1px solid #d6e0e0;padding-top:16px;color:#526875;font-size:.85rem}[hidden]{display:none!important}@media(max-width:650px){main{padding:18px 12px 40px}.panel,.column{padding:16px}.rule-list{columns:1}.actions>*{max-width:100%}}@media print{.controls,footer{display:none}.column{break-before:page}.plot{overflow:visible}.plot img{max-width:100%;height:auto}}
+</style></head><body><main>
+<header><div class="eyebrow">Time-ordered data · Eight Nelson rules</div><h1>See the patterns in your process.</h1><p class="lede">Explore Individuals and Moving Range charts, see which points trigger each rule, and take the results with you. Start with the example or choose your own CSV.</p></header>
+<div class="method"><strong>Method: sample-SD limits.</strong> This tool uses the ordinary sample standard deviation of each series and applies all eight rules to both charts. These are deliberate choices from the original application, and differ from conventional IMR control limits. Pattern flags are prompts to investigate, not proof of a cause.</div>
+<section class="panel controls" aria-labelledby="start"><h2 id="start">Start exploring</h2><p>Your data is processed in this browser. It is not sent to a server or saved by the app.</p><div class="actions"><button id="demo" type="button">Try the example</button><button id="sample" class="secondary" type="button">Download sample CSV</button></div><form id="upload"><label for="file">Or choose your CSV file</label><input id="file" type="file" accept=".csv,text/csv" required><div class="actions"><button id="analyse" type="submit">Analyse my CSV</button></div></form><p class="muted">UTF-8 CSV · Up to 10 MB · 3–1,638 data rows. For useful estimates, aim for 20 or more observations.</p><details><summary>How to prepare your data</summary><ol><li>In your spreadsheet, put each measurement series in a separate column. Name it <code>IMR_Field</code> or use a name such as <code>IMR_Field_WaitTime</code>. The prefix is case-sensitive.</li><li>Keep rows in time order. Every selected cell must contain a finite number; do not include blanks, totals or units. Other columns, such as dates or notes, are ignored.</li><li>Save as <strong>CSV UTF-8 (comma-delimited)</strong>, then choose the file above. No Excel installation is needed to use the tool.</li></ol><p>Moving ranges measure the absolute change from one row to the next, so the MR chart begins at point 2. Charts scroll horizontally when they are wide.</p></details><details><summary>The eight pattern rules</summary><ol class="rule-list"><li>One point beyond 3 SD.</li><li>Nine or more points on one side of the mean.</li><li>Six or more points steadily rising or falling.</li><li>Fourteen or more points alternating up and down.</li><li>Two of three points beyond 2 SD, on the same side.</li><li>Four of five points beyond 1 SD, on the same side.</li><li>Fifteen or more points within 1 SD.</li><li>Eight or more points outside 1 SD. Either side is allowed, including all on one side.</li></ol><p>Points on a zone boundary are excluded using a relative tolerance of 10⁻⁹. Equal or near-equal consecutive values break trends. Overlapping qualifying windows are merged; only their qualifying points are marked. All rules are evaluated independently.</p></details></section>
+<div id="status" class="status" role="status" aria-live="polite"></div><div id="downloads" class="actions" hidden></div><div id="results"></div><footer>Nelson Patterns · Browser edition · No installation, account, analytics or external libraries. Save this HTML file to use it offline.</footer></main>
+<script id="sample-data" type="application/json">"IMR_Field_Rule1,IMR_Field_Rule2,IMR_Field_Rule3,IMR_Field_Rule4,IMR_Field_Rule5,IMR_Field_Rule6,IMR_Field_Rule7,IMR_Field_Rule8,IMR_Field_Clean,Notes\n-2,8,-4,-4,-0.67,-0.67,0,-8,3,fixed point 1\n-4,8,-3,4,-1.33,-1.33,0,8,1,fixed point 2\n-1,8,-2,-4,-0.33,-0.33,0,-8,4,fixed point 3\n-4,8,-1,4,-1.33,-1.33,0,8,1,fixed point 4\n0,8,0,-4,0,0,0,-8,5,fixed point 5\n4,8,1,4,1.33,1.33,0,8,9,fixed point 6\n-3,8,2,-4,-1,-1,0,-8,2,fixed point 7\n1,8,3,4,0.33,0.33,0,8,6,fixed point 8\n0,8,0,-4,0,0,0,0,5,fixed point 9\n-2,8,-2,4,20,10,0,-0.67,3,fixed point 10\n0,0,0,-4,0,10,0,0,5,fixed point 11\n3,3,3,4,20,1,0,1,8,fixed point 12\n4,4,4,-4,1.33,10,0,1.33,9,fixed point 13\n2,2,2,4,0.67,10,0,0.67,7,fixed point 14\n4,4,4,-4,1.33,1.33,0,1.33,9,fixed point 15\n-2,-2,-2,4,-0.67,-0.67,0,-0.67,3,fixed point 16\n-3,-3,-3,-3,-1,-1,0,-1,2,fixed point 17\n-2,-2,-2,-2,-0.67,-0.67,0,-0.67,3,fixed point 18\n3,3,3,3,1,1,9,1,8,fixed point 19\n40,-1,-1,-1,-0.33,-0.33,-3,-0.33,4,fixed point 20\n1,1,1,1,0.33,0.33,3,0.33,6,fixed point 21\n-3,-3,-3,-3,-1,-1,-9,-1,2,fixed point 22\n1,1,1,1,0.33,0.33,3,0.33,6,fixed point 23\n-1,-1,-1,-1,-0.33,-0.33,-3,-0.33,4,fixed point 24\n-2,-2,-2,-2,-0.67,-0.67,-6,-0.67,3,fixed point 25\n-2,-2,-2,-2,-0.67,-0.67,-6,-0.67,3,fixed point 26\n3,3,3,3,1,1,9,1,8,fixed point 27\n-2,-2,-2,-2,-0.67,-0.67,-6,-0.67,3,fixed point 28\n-3,-3,-3,-3,-1,-1,-9,-1,2,fixed point 29\n2,2,2,2,0.67,0.67,6,0.67,7,fixed point 30\n4,4,4,4,1.33,1.33,12,1.33,9,fixed point 31\n0,0,0,0,0,0,0,0,5,fixed point 32\n-5,-5,-5,-5,-1.67,-1.67,-15,-1.67,0,fixed point 33\n-3,-3,-3,-3,-1,-1,-9,-1,2,fixed point 34\n3,3,3,3,1,1,9,1,8,fixed point 35\n3,3,3,3,1,1,9,1,8,fixed point 36\n-1,-1,-1,-1,-0.33,-0.33,-3,-0.33,4,fixed point 37\n-4,-4,-4,-4,-1.33,-1.33,-12,-1.33,1,fixed point 38\n4,4,4,4,1.33,1.33,12,1.33,9,fixed point 39\n2,2,2,2,0.67,0.67,6,0.67,7,fixed point 40\n"</script>
+<script id="app">
+'use strict';
+(() => {
+const TOL=1e-9, MAX_BYTES=10000000;
+const RULE_NAMES=['','One point beyond 3 SD','Nine or more points on one side of the mean','Six or more points steadily rising or falling','Fourteen or more points alternating up and down','Two of three points beyond 2 SD (same side)','Four of five points beyond 1 SD (same side)','Fifteen or more points within 1 SD of the mean','Eight or more points beyond 1 SD, either side'];
+const numeric=/^[+-]?(\d+\.?\d*|\.\d+)([eE][+-]?\d+)?$/;
+const f=x=>x.toFixed(3), range=(a,b)=>Array.from({length:b-a+1},(_,i)=>a+i);
+const on=(v,l)=>Math.abs(v-l)<=TOL*Math.max(1,Math.abs(l));
+const above=(v,l)=>v>l&&!on(v,l), below=(v,l)=>v<l&&!on(v,l);
+const sign=(a,b)=>Math.abs(b-a)<=TOL*Math.max(1,Math.abs(a),Math.abs(b))?0:b>a?1:-1;
+const safeName=s=>s.replace(/[^A-Za-z0-9_-]/g,'_');
+function parseCSV(text){
+  text=text.replace(/^\uFEFF/,'');
+  const rows=[];let row=[],cell='',quoted=false,afterQuote=false,started=false;
+  for(let i=0;i<text.length;i++){
+    const c=text[i];
+    if(quoted){if(c==='"'){if(text[i+1]==='"'){cell+='"';i++;}else{quoted=false;afterQuote=true;}}else cell+=c;continue;}
+    if(afterQuote&&c!==','&&c!=='\n'&&c!=='\r')throw Error('Invalid CSV: unexpected text after a closing quote.');
+    if(c==='"'&&!started){quoted=true;started=true;continue;}
+    if(c===','){row.push(cell);cell='';started=false;afterQuote=false;}
+    else if(c==='\n'||c==='\r'){row.push(cell);rows.push(row);row=[];cell='';started=false;afterQuote=false;if(c==='\r'&&text[i+1]==='\n')i++;}
+    else{cell+=c;started=true;}
+  }
+  if(quoted)throw Error('Invalid CSV: an opening quote has no closing quote.');
+  if(started||afterQuote||cell||row.length){row.push(cell);rows.push(row);}
+  return rows;
+}
+function stats(values){
+  const n=values.length;
+  // Center before scaling to retain small differences around a large offset.
+  let anchor=values[0],delta=values.map(v=>v-anchor);
+  if(!delta.every(Number.isFinite)){anchor=0;delta=values.slice();}
+  let scale=0;for(const v of delta)scale=Math.max(scale,Math.abs(v));
+  if(scale===0)return {n,mean:anchor,sd:0,lines:Object.fromEntries(range(-3,3).map(k=>[k,anchor]))};
+  const sum=a=>{let s=0,c=0;for(const v of a){const y=v-c,t=s+y;c=(t-s)-y;s=t;}return s;};
+  const norm=delta.map(v=>v/scale),m=sum(norm)/n;
+  const sd=scale*Math.sqrt(sum(norm.map(v=>(v-m)**2))/(n-1)),mean=anchor+scale*m;
+  const lines=Object.fromEntries(range(-3,3).map(k=>[k,mean+k*sd]));
+  if(![mean,sd,...Object.values(lines)].every(Number.isFinite))throw Error('Values are too large to calculate finite chart statistics. Rescale the measurements and try again.');
+  return {n,mean,sd,lines};
+}
+function detect(values,points,L,field,chart){
+  const out=[],n=values.length;
+  function add(rule,direction,positions,a=positions[0],b=positions[positions.length-1]){
+    const p=positions.map(i=>points[i]),v=positions.map(i=>values[i]),lo=points[a],hi=points[b];
+    const pairs=p.map((x,i)=>`${x}=${f(v[i])}`).join(', ');let line='',description='';
+    if(rule===1){const k=direction==='above'?3:-3;line=`${k>0?'+':''}${k} SD=${f(L[k])}`;description=`Rule 1 — One point beyond 3 SD: point ${p[0]} (value ${f(v[0])}) is ${direction} the ${k>0?'+3':'−3'} SD line (${f(L[k])}).`;}
+    if(rule===2){line=`mean=${f(L[0])}`;description=`Rule 2 — Nine or more points on one side of the mean: ${p.length} consecutive points ${direction} the mean (${f(L[0])}), points ${lo}–${hi}. Values: ${pairs}.`;}
+    if(rule===3)description=`Rule 3 — Six or more points steadily ${direction}: ${p.length} consecutive points, ${lo}–${hi}. Values: ${pairs}.`;
+    if(rule===4)description=`Rule 4 — Fourteen or more points alternating up and down: ${p.length} consecutive points, ${lo}–${hi}. Values: ${pairs}.`;
+    if(rule===5||rule===6){const zone=rule===5?2:1,k=direction==='above'?zone:-zone;line=`${k>0?'+':''}${k} SD=${f(L[k])}; window ${lo}-${hi}`;description=`Rule ${rule} — ${rule===5?'Two of three points beyond 2 SD':'Four of five points beyond 1 SD'}: points ${p.join(', ')} (values ${v.map(f).join(', ')}) are ${direction} the ${k>0?'+':'−'}${zone} SD line (${f(L[k])}); window ${lo}–${hi}.`;}
+    if(rule===7||rule===8)line=`-1 SD=${f(L[-1])}; +1 SD=${f(L[1])}`;
+    if(rule===7)description=`Rule 7 — Fifteen or more points within 1 SD of the mean: ${p.length} consecutive points, ${lo}–${hi}, all between the −1 SD line (${f(L[-1])}) and the +1 SD line (${f(L[1])}). Values: ${pairs}.`;
+    if(rule===8){const up=v.filter(x=>above(x,L[1])).length;description=`Rule 8 — Eight or more points beyond 1 SD on either side: ${p.length} consecutive points, ${lo}–${hi}, none within 1 SD (${up} above, ${p.length-up} below). Values: ${pairs}.`;}
+    out.push({field,chart,rule_no:rule,rule_name:RULE_NAMES[rule],direction,points:p,values:v,span:[lo,hi],line_or_window:line,description});
+  }
+  function runs(labels,min,callback){for(let a=0;a<labels.length;){if(!labels[a]){a++;continue;}let b=a;while(b+1<labels.length&&labels[b+1]===labels[a])b++;if(b-a+1>=min)callback(a,b,labels[a]);a=b+1;}}
+  values.forEach((v,i)=>{if(above(v,L[3]))add(1,'above',[i]);if(below(v,L[-3]))add(1,'below',[i]);});
+  runs(values.map(v=>above(v,L[0])?1:below(v,L[0])?-1:0),9,(a,b,s)=>add(2,s===1?'above':'below',range(a,b)));
+  const diffs=values.slice(1).map((v,i)=>sign(values[i],v));
+  runs(diffs,5,(a,b,s)=>add(3,s===1?'rising':'falling',range(a,b+1)));
+  for(let a=0;a<diffs.length;){if(!diffs[a]){a++;continue;}let b=a;while(b+1<diffs.length&&diffs[b+1]&&diffs[b+1]===-diffs[b])b++;if(b-a+1>=13)add(4,'alternating',range(a,b+1));a=b+1;}
+  for(const [rule,width,count,zone] of [[5,3,2,2],[6,5,4,1]])for(const direction of ['above','below']){
+    const flags=values.map(v=>direction==='above'?above(v,L[zone]):below(v,L[-zone])),windows=[];
+    for(let a=0;a<=n-width;a++)if(flags.slice(a,a+width).filter(Boolean).length>=count){const last=windows[windows.length-1];if(last&&a<=last[1])last[1]=a+width-1;else windows.push([a,a+width-1]);}
+    for(const [a,b] of windows)add(rule,direction,range(a,b).filter(i=>flags[i]),a,b);
+  }
+  runs(values.map(v=>above(v,L[-1])&&below(v,L[1])?1:0),15,(a,b)=>add(7,'within',range(a,b)));
+  runs(values.map(v=>above(v,L[1])||below(v,L[-1])?1:0),8,(a,b)=>add(8,'either',range(a,b)));
+  return out.sort((a,b)=>a.rule_no-b.rule_no||a.points[0]-b.points[0]);
+}
+function analyse(text){
+  const rows=parseCSV(text),header=(rows.shift()||[]).map(x=>x.trim()),selected=header.map((name,index)=>({name,index})).filter(c=>c.name.startsWith('IMR_Field'));
+  const errors=[];if(!selected.length)errors.push('V05: No column starts with IMR_Field (case-sensitive).');
+  if(new Set(selected.map(c=>c.name)).size!==selected.length)errors.push('V06: Selected column names must be unique.');
+  const bad=[];rows.forEach((row,i)=>{if(row.length!==header.length)errors.push(`V07: CSV row ${i+2} has ${row.length} cells; expected ${header.length}.`);for(const c of selected){if(c.index>=row.length)continue;const s=row[c.index].trim();if(!numeric.test(s)||!Number.isFinite(Number(s)))bad.push(`row ${i+2}, ${c.name}: ${JSON.stringify(s)}`);}});
+  if(bad.length)errors.push(`V08: Invalid numeric cells:\n${bad.slice(0,20).join('\n')}${bad.length>20?`\n…and ${bad.length-20} more.`:''}`);
+  if(rows.length<3)errors.push(`V09: At least 3 data rows are required; found ${rows.length}.`);
+  if(errors.length)throw Error(errors.join('\n'));
+  return selected.map(({name,index})=>{
+    const values=rows.map(r=>Number(r[index].trim())),mr=values.slice(1).map((v,i)=>Math.abs(v-values[i])),n=values.length;
+    if(!mr.every(Number.isFinite))throw Error('Values are too large to calculate finite moving ranges. Rescale the measurements and try again.');
+    const I=stats(values),M=stats(mr),column={name,n,charts:[],warning:n<20?`Only ${n} points. Control limits based on fewer than 20 points are unreliable; treat every pattern below as indicative.`:''};
+    if(I.sd===0)return {...column,code:'V10',rejected:`All \`${n}\` values in \`${name}\` are identical (\`${f(values[0])}\`), so the standard deviation is zero and no chart can be drawn for this column.`};
+    if(M.sd===0)return {...column,code:'V11',rejected:`Every consecutive gap in \`${name}\` is identical (\`${f(mr[0])}\`), so the Moving Range chart's standard deviation is zero and this column cannot be charted.`};
+    column.charts=[['I',values,range(1,n),I],['MR',mr,range(2,n),M]].map(([kind,v,p,s])=>({kind,values:v,points:p,stats:s,observations:detect(v,p,s.lines,name,kind)}));
+    return column;
+  });
+}
+const CSV_FIELDS=['field','chart','rule_no','rule_name','direction','points','values','line_or_window','description'];
+const csvCell=x=>{const s=String(x);return /[",\r\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;};
+function observationsCSV(columns){
+  const rows=[CSV_FIELDS];for(const c of columns)for(const chart of c.charts)for(const o of chart.observations){const p=o.points,points=p.length>1&&p.every((v,i)=>!i||v===p[i-1]+1)?`${p[0]}-${p[p.length-1]}`:p.join(',');rows.push(CSV_FIELDS.map(k=>k==='points'?points:k==='values'?o.values.map(f).join(';'):o[k]));}
+  return rows.map(r=>r.map(csvCell).join(',')).join('\r\n')+'\r\n';
+}
+globalThis.IMRCore={parseCSV,analyse,stats,detect,observationsCSV,on,sign};
+if(typeof document==='undefined')return;
+const $=id=>document.getElementById(id),esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const sample=JSON.parse($('sample-data').textContent);let urls=[],generation=0;
+function download(data,name,type){const url=URL.createObjectURL(new Blob([data],{type})),a=document.createElement('a');a.href=url;a.download=name;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),30000);}
+function button(label,action,secondary=false){const b=document.createElement('button');b.type='button';b.textContent=label;if(secondary)b.className='secondary';b.addEventListener('click',action);return b;}
+function clear(){generation++;$('results').replaceChildren();$('downloads').replaceChildren();$('downloads').hidden=true;$('status').className='status';$('status').textContent='';for(const u of urls)URL.revokeObjectURL(u);urls=[];return generation;}
+function chartCanvas(c,chart){
+  const canvas=document.createElement('canvas');canvas.width=Math.max(1000,20*c.n);canvas.height=450;
+  // Browsers have finite canvas dimensions: fail visibly instead of exporting blank charts.
+  if(canvas.width>32760)throw Error('This browser edition supports up to 1,638 rows per chart for full-width PNG exports. Please split larger files into smaller CSVs.');
+  const ctx=canvas.getContext('2d');if(!ctx)throw Error('This browser could not create a chart. Try a smaller CSV.');
+  canvas.setAttribute('role','img');canvas.setAttribute('aria-label',`${c.name} ${chart.kind} chart. ${chart.observations.length} patterns. Full values are in the original CSV and pattern descriptions below.`);
+  const W=canvas.width,H=canvas.height,left=85,right=W-115,top=58,bottom=385,L=chart.stats.lines;
+  let low=chart.kind==='MR'?0:Math.min(...chart.values,L[-3]),high=Math.max(...chart.values,L[3]);
+  const pad=(high-low)*.12||1;high+=pad;if(chart.kind!=='MR')low-=pad;
+  const x=p=>left+(p-.5)/c.n*(right-left),y=v=>bottom-(v-low)/(high-low)*(bottom-top);
+  ctx.fillStyle='white';ctx.fillRect(0,0,W,H);ctx.fillStyle='#142b38';ctx.font='bold 17px system-ui';ctx.textAlign='left';ctx.fillText(`${c.name} — ${chart.kind==='I'?'Individuals':'Moving Range'}`,left,28,W-left-20);
+  ctx.font='12px system-ui';ctx.strokeStyle='#b6c2c8';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(left,top);ctx.lineTo(left,bottom);ctx.lineTo(right,bottom);ctx.stroke();
+  ctx.textAlign='right';for(let i=0;i<=5;i++){const v=low+(high-low)*i/5;ctx.fillText(f(v),left-9,y(v)+4);}
+  for(let k=-3;k<=3;k++){if(chart.kind==='MR'&&L[k]<0)continue;ctx.strokeStyle=k===0?'#111':'#c32b30';ctx.setLineDash(k===0||Math.abs(k)<3?[3,4]:[]);ctx.beginPath();ctx.moveTo(left,y(L[k]));ctx.lineTo(right,y(L[k]));ctx.stroke();ctx.fillStyle=ctx.strokeStyle;ctx.textAlign='left';ctx.fillText(k===0?'Mean':`${k>0?'+':'−'}${Math.abs(k)} SD`,right+10,y(L[k])+4);}
+  ctx.setLineDash([]);ctx.strokeStyle='#111';ctx.lineWidth=1;ctx.beginPath();chart.values.forEach((v,i)=>i?ctx.lineTo(x(chart.points[i]),y(v)):ctx.moveTo(x(chart.points[i]),y(v)));ctx.stroke();
+  const marked=new Set(chart.observations.flatMap(o=>o.points));ctx.font='11px system-ui';ctx.textAlign='center';chart.values.forEach((v,i)=>{const px=x(chart.points[i]),py=y(v);ctx.fillStyle=marked.has(chart.points[i])?'#c62828':'#111';ctx.beginPath();if(marked.has(chart.points[i])){ctx.moveTo(px,py-6);ctx.lineTo(px-6,py+5);ctx.lineTo(px+6,py+5);ctx.closePath();}else ctx.arc(px,py,3,0,Math.PI*2);ctx.fill();ctx.fillStyle='#111';ctx.fillText(String(chart.points[i]),px,py-10);});
+  ctx.font='12px system-ui';for(let p=1;p<=c.n;p++)if(c.n<=50||p===1||p%5===0)ctx.fillText(String(p),x(p),bottom+20);ctx.fillText('Point number (CSV row order)',(left+right)/2,H-15);ctx.save();ctx.translate(20,(top+bottom)/2);ctx.rotate(-Math.PI/2);ctx.fillText(chart.kind==='I'?'Value':'Moving range',0,0);ctx.restore();return canvas;
+}
+function table(chart){const s=chart.stats,rows=[['Points',s.n],['Mean',f(s.mean)],['Sample SD',f(s.sd)],...([3,2,1,-1,-2,-3].map(k=>[`${k>0?'+':'−'}${Math.abs(k)} SD`,f(s.lines[k])+(chart.kind==='MR'&&s.lines[k]<0?' (below 0, not drawn)':'')])),['Patterns',chart.observations.length]];return '<table class="stats"><caption class="muted">Chart statistics</caption><tbody>'+rows.map(([a,b])=>`<tr><th scope="row">${a}</th><td>${b}</td></tr>`).join('')+'</tbody></table>';}
+async function render(text,filename,token){
+  const start=performance.now();$('status').textContent='Analysing and drawing charts…';await new Promise(r=>setTimeout(r,0));if(token!==generation)return;
+  try{
+    const columns=analyse(text),stem=safeName(filename.replace(/\.[^.]*$/,''))||'data',when=new Date().toLocaleString(),fragment=document.createDocumentFragment();
+    const head=document.createElement('div');head.className='report-head';head.innerHTML=`<h2>Results: ${esc(filename)}</h2><p class="muted">Analysed ${esc(when)} · Red triangles mark points belonging to one or more patterns.</p>`;fragment.append(head);
+    for(const c of columns){if(token!==generation)return;const section=document.createElement('section');section.className='column';section.innerHTML=`<h2>${esc(c.name)}</h2>${c.warning?`<p class="warning">${esc(c.warning)}</p>`:''}`;
+      if(c.rejected)section.innerHTML+=`<p class="error">${c.code}: ${esc(c.rejected)}</p>`;
+      for(const chart of c.charts){const box=document.createElement('div');box.className='chart';box.innerHTML=`<h3>${chart.kind==='I'?'Individuals (I)':'Moving Range (MR)'}</h3>`;const plot=document.createElement('div');plot.className='plot';const canvas=chartCanvas(c,chart);plot.append(canvas);box.append(plot);const png=canvas.toDataURL('image/png');if(png==='data:,')throw Error('The chart is too large for this browser. Try fewer rows.');
+        const a=document.createElement('a');a.className='download secondary controls';a.textContent=`Download ${chart.kind} PNG`;a.download=`${stem}_${safeName(c.name)}_${chart.kind}.png`;a.href=png;box.append(a);
+        const detail=document.createElement('div');detail.innerHTML=table(chart)+(chart.observations.length?'<ol class="observations">'+chart.observations.map(o=>`<li>${esc(o.description)}</li>`).join('')+'</ol>':'<p>No Nelson patterns detected.</p>');box.append(detail);section.append(box);canvas.dataset.png=png;
+      }fragment.append(section);await new Promise(r=>setTimeout(r,0));
+    }
+    if(token!==generation)return;$('results').replaceChildren(fragment);
+    const count=columns.flatMap(c=>c.charts).reduce((n,c)=>n+c.observations.length,0),accepted=columns.filter(c=>!c.rejected).length;
+    $('status').textContent=`${accepted} of ${columns.length} columns charted · ${count} patterns · ${((performance.now()-start)/1000).toFixed(2)} seconds`;
+    const csv=observationsCSV(columns);
+    $('downloads').append(button('Download HTML report',()=>{
+      const clone=$('results').cloneNode(true);clone.removeAttribute('id');clone.querySelectorAll('.controls').forEach(x=>x.remove());const originals=$('results').querySelectorAll('canvas');clone.querySelectorAll('canvas').forEach((canvas,i)=>{const img=document.createElement('img');img.src=originals[i].dataset.png;img.width=originals[i].width;img.height=originals[i].height;img.alt=originals[i].getAttribute('aria-label');canvas.replaceWith(img);});
+      const report='<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>'+esc(filename)+' — IMR report</title><style>'+document.querySelector('style').textContent+'</style></head><body><main><h1>Nelson Patterns · IMR report</h1>'+document.querySelector('.method').outerHTML+clone.outerHTML+'</main></body></html>';download(report,`${stem}_IMR_report.html`,'text/html;charset=utf-8');
+    }),button('Download observations CSV',()=>download(csv,`${stem}_observations.csv`,'text/csv;charset=utf-8'),true));$('downloads').hidden=false;
+  }catch(e){if(token!==generation)return;$('results').replaceChildren();$('downloads').replaceChildren();$('downloads').hidden=true;$('status').className='status error';$('status').textContent=e.message;}
+}
+$('demo').addEventListener('click',()=>{const token=clear();$('file').value='';render(sample,'sample_imr.csv',token);});
+$('sample').addEventListener('click',()=>download(sample,'sample_imr.csv','text/csv;charset=utf-8'));
+$('file').addEventListener('change',clear);
+$('upload').addEventListener('submit',async e=>{e.preventDefault();const token=clear(),file=$('file').files[0];try{if(!file)throw Error('V01: Choose a CSV file.');if(!/\.csv$/i.test(file.name))throw Error('V02: Choose a file ending in .csv.');if(file.size>MAX_BYTES)throw Error('V03: File exceeds 10 MB.');let text;try{text=new TextDecoder('utf-8',{fatal:true}).decode(await file.arrayBuffer());}catch{throw Error('V04: The file is not valid UTF-8. Save it as CSV UTF-8.');}if(token===generation)await render(text,file.name,token);}catch(error){if(token===generation){$('status').className='status error';$('status').textContent=error.message;}}});
+})();
+</script></body></html>
